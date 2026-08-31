@@ -33,8 +33,8 @@ const projects = [
     title: "CRM销售管理系统",
     description:
       "围绕销售线索、客户跟进、商机推进与数据看板搭建的一套 B 端产品设计，强调高频任务效率、信息层级与跨角色协作。",
-    image: "/assets/project-crm-cover.png",
-    detailUrl: "/assets/crm-portfolio.pdf",
+    image: assetPath("/assets/project-crm-cover.png"),
+    detailUrl: assetPath("/assets/crm-portfolio.pdf"),
     tags: ["CRM", "SaaS", "B端体验", "数据看板"],
     meta: "PC端",
   },
@@ -42,7 +42,7 @@ const projects = [
     title: "翔创官网",
     description:
       "围绕企业品牌展示、业务介绍与线索转化进行官网体验优化，后续可补充视觉稿、页面结构与上线沉淀。",
-    image: "/assets/project-xiangchuang-cover.png",
+    image: assetPath("/assets/project-xiangchuang-cover.png"),
     detailUrl: "https://innovationai.com.cn/#/",
     tags: ["官网设计", "品牌表达", "转化链路"],
     meta: "Web端",
@@ -51,8 +51,8 @@ const projects = [
     title: "荣昌数智贷",
     description:
       "面向金融业务场景的产品体验设计，后续可补充核心流程、风控信息层级、表单体验与关键页面截图。",
-    image: "/assets/project-rongchang-cover.png?v=20260829",
-    detailUrl: "/assets/rongchang-loan-app-portfolio.pdf?v=20260829",
+    image: assetPath("/assets/project-rongchang-cover.png?v=20260829"),
+    detailUrl: assetPath("/assets/rongchang-loan-app-portfolio.pdf?v=20260829"),
     tags: ["金融产品", "流程设计", "表单体验"],
     meta: "移动端",
   },
@@ -60,8 +60,8 @@ const projects = [
     title: "数据大屏",
     description:
       "聚焦数据指标、驾驶舱布局与动态展示节奏，后续可补充大屏视觉、数据模块与动效说明。",
-    image: "/assets/project-dashboard-cover.png",
-    detailUrl: "/assets/dashboard-portfolio.pdf",
+    image: assetPath("/assets/project-dashboard-cover.png"),
+    detailUrl: assetPath("/assets/dashboard-portfolio.pdf"),
     tags: ["数据可视化", "大屏设计", "指标看板"],
     meta: "大屏端",
   },
@@ -76,6 +76,10 @@ const contactValue = "13099056059";
 const contactPhoneDisplay = "130 9905 6059";
 const contactEmail = "443370547@qq.com";
 const editableCopyStorageKey = "mengxiaoyi-portfolio-copy";
+
+function assetPath(path) {
+  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+}
 
 const readEditableCopy = () => {
   if (typeof window === "undefined") return {};
@@ -475,6 +479,7 @@ function App() {
   return (
     <main
       onPointerMove={moveGlobalTrail}
+      style={{ "--about-floor-bg": `url("${assetPath("/assets/about-floor-bg.png")}")` }}
     >
       <div className="global-ambient" aria-hidden="true">
         <div className="global-aurora" />
@@ -544,9 +549,9 @@ function App() {
           muted
           loop
           playsInline
-          poster="/assets/hero-poster.png"
+          poster={assetPath("/assets/hero-poster.png")}
         >
-          <source src="/assets/hero-background.mp4" type="video/mp4" />
+          <source src={assetPath("/assets/hero-background.mp4")} type="video/mp4" />
         </video>
         <div className="hero-gradient" />
         <div className="hero-beam" />
@@ -639,7 +644,7 @@ function App() {
                 </strong>
               </div>
               <div className="id-photo-card">
-                <img src="/assets/profile-id-photo.png" alt="孟肖依证件照" />
+                <img src={assetPath("/assets/profile-id-photo.png")} alt="孟肖依证件照" />
               </div>
             </article>
 
@@ -659,7 +664,7 @@ function App() {
             <EditableText as="h3" copyId="career.title">工作经历</EditableText>
             <div className="career-timeline">
               <div className="career-line">
-                <img src="/assets/career-glow-arrow.png" alt="" aria-hidden="true" />
+                <img src={assetPath("/assets/career-glow-arrow.png")} alt="" aria-hidden="true" />
               </div>
               <div className="career-list">
                 {workExperiences.map((item, itemIndex) => (
@@ -811,7 +816,7 @@ function App() {
         className={`contact-section ${isContactVisible ? "is-visible" : ""}`}
         id="contact"
       >
-        <img className="contact-bg-image" src="/assets/contact-ending-bg.png" alt="" aria-hidden="true" />
+        <img className="contact-bg-image" src={assetPath("/assets/contact-ending-bg.png")} alt="" aria-hidden="true" />
         <div className="contact-starfield" aria-hidden="true">
           {Array.from({ length: 32 }).map((_, index) => (
             <span key={index} />
@@ -819,7 +824,7 @@ function App() {
         </div>
         <div className="container contact-layout">
           <div className="contact-thanks">
-            <img className="contact-thanks-line" src="/assets/contact-thanks-line.png" alt="" aria-hidden="true" />
+            <img className="contact-thanks-line" src={assetPath("/assets/contact-thanks-line.png")} alt="" aria-hidden="true" />
             <EditableText
               as="h2"
               className="hero-title contact-thanks-title"
@@ -830,7 +835,7 @@ function App() {
             </EditableText>
           </div>
           <div className="contact-panel">
-            <img className="contact-qr" src="/assets/contact-wechat-qr.png" alt="微信二维码" />
+            <img className="contact-qr" src={assetPath("/assets/contact-wechat-qr.png")} alt="微信二维码" />
             <div className="contact-info">
               <div className="contact-row">
                 <Phone size={18} />

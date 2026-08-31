@@ -4,6 +4,7 @@ import { cloudflare } from "@cloudflare/vite-plugin";
 import { sites } from "@openai/sites-vite-plugin";
 
 export default defineConfig({
+  base: process.env.GITHUB_PAGES === "true" ? "/my-portfolio/" : "/",
   plugins: [
     react(),
     sites(),
