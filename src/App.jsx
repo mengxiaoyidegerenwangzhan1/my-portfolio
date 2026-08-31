@@ -1,21 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import {
-  BriefcaseBusiness,
-  Check,
   ChevronRight,
-  Layers3,
+  Copy,
+  Mail,
   MessageCircle,
-  MousePointer2,
-  PencilLine,
   Phone,
-  Sparkles,
-  Workflow,
 } from "lucide-react";
 
 const navItems = [
   { label: "经历", href: "#experience" },
   { label: "项目", href: "#projects" },
-  { label: "优势", href: "#strengths" },
   { label: "联系", href: "#contact" },
 ];
 
@@ -25,71 +19,74 @@ const workExperiences = [
   {
     period: "2023 - NOW",
     company: "泛微网络科技",
-    details: ["OA办公系统", "售前咨询部", "UI设计"],
+    details: ["OA办公系统", "售前部", "UI设计"],
   },
   {
     period: "2022 - 2023",
     company: "翔创科技",
     details: ["养殖金融", "研发部", "初级产品、UI设计"],
   },
-  {
-    period: "2022 - 2023 (实习)",
-    company: "中圆智能",
-    details: ["建筑消防", "产品研发部", "UI设计"],
-  },
 ];
 
 const projects = [
   {
-    title: "CRM 客户关系管理系统",
+    title: "CRM销售管理系统",
     description:
       "围绕销售线索、客户跟进、商机推进与数据看板搭建的一套 B 端产品设计，强调高频任务效率、信息层级与跨角色协作。",
-    image: "/assets/project-crm.png",
+    image: "/assets/project-crm-cover.png",
+    detailUrl: "/assets/crm-portfolio.pdf",
     tags: ["CRM", "SaaS", "B端体验", "数据看板"],
-    meta: "核心作品 / 持续整理中",
+    meta: "PC端",
   },
   {
-    title: "企业协作与流程体验",
+    title: "翔创官网",
     description:
-      "基于泛微工作经历沉淀的业务理解，覆盖组织协同、审批流、表单配置与管理后台等企业级场景。",
-    image: "/assets/project-workflow.png",
-    tags: ["协作系统", "流程设计", "后台体验"],
-    meta: "经历沉淀 / 待补充案例",
+      "围绕企业品牌展示、业务介绍与线索转化进行官网体验优化，后续可补充视觉稿、页面结构与上线沉淀。",
+    image: "/assets/project-xiangchuang-cover.png",
+    detailUrl: "https://innovationai.com.cn/#/",
+    tags: ["官网设计", "品牌表达", "转化链路"],
+    meta: "Web端",
+  },
+  {
+    title: "荣昌数智贷",
+    description:
+      "面向金融业务场景的产品体验设计，后续可补充核心流程、风控信息层级、表单体验与关键页面截图。",
+    image: "/assets/project-rongchang-cover.png?v=20260829",
+    detailUrl: "/assets/rongchang-loan-app-portfolio.pdf?v=20260829",
+    tags: ["金融产品", "流程设计", "表单体验"],
+    meta: "移动端",
+  },
+  {
+    title: "数据大屏",
+    description:
+      "聚焦数据指标、驾驶舱布局与动态展示节奏，后续可补充大屏视觉、数据模块与动效说明。",
+    image: "/assets/project-dashboard-cover.png",
+    detailUrl: "/assets/dashboard-portfolio.pdf",
+    tags: ["数据可视化", "大屏设计", "指标看板"],
+    meta: "大屏端",
   },
 ];
 
-const strengths = [
-  {
-    icon: Workflow,
-    title: "复杂流程拆解",
-    copy: "能把业务链路、角色权限和关键状态梳理成清晰的信息架构，让复杂系统更容易被使用和交付。",
-  },
-  {
-    icon: Layers3,
-    title: "B端界面体系化",
-    copy: "关注组件复用、页面密度、字段层级和状态反馈，适合 CRM、OA、协作平台等高频工作台场景。",
-  },
-  {
-    icon: MousePointer2,
-    title: "交互落地意识",
-    copy: "从用户路径、异常状态到开发实现边界一起考虑，减少设计稿与真实产品之间的落差。",
-  },
-  {
-    icon: Sparkles,
-    title: "审美克制但有记忆点",
-    copy: "偏好干净、精准、有秩序的视觉语言，在专业感之外保留适度的科技感与个人辨识度。",
-  },
-];
+const projectTabs = ["CRM", "翔创官网", "荣昌数智贷", "数据大屏"];
 
+const heroTitle = "孟肖依的个人作品集网站";
+const legacyHeroTitle = "孟肖依的个人网站";
 const designStatement = "设计观-小的细节有序组合而成好的设计";
 const contactValue = "13099056059";
+const contactPhoneDisplay = "130 9905 6059";
+const contactEmail = "443370547@qq.com";
 const editableCopyStorageKey = "mengxiaoyi-portfolio-copy";
 
 const readEditableCopy = () => {
   if (typeof window === "undefined") return {};
 
   try {
-    return JSON.parse(window.localStorage.getItem(editableCopyStorageKey) || "{}");
+    const savedCopy = JSON.parse(window.localStorage.getItem(editableCopyStorageKey) || "{}");
+    if (savedCopy["hero.title"] === legacyHeroTitle) {
+      savedCopy["hero.title"] = heroTitle;
+      window.localStorage.setItem(editableCopyStorageKey, JSON.stringify(savedCopy));
+    }
+    return savedCopy;
   } catch {
     return {};
   }
@@ -98,13 +95,20 @@ const readEditableCopy = () => {
 function App() {
   const [copyNotice, setCopyNotice] = useState("");
   const [starTrails, setStarTrails] = useState([]);
+  const [isTopVisible, setIsTopVisible] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return window.location.hash === "" || window.location.hash === "#top";
+  });
   const [isExperienceVisible, setIsExperienceVisible] = useState(false);
   const [isIntroCompact, setIsIntroCompact] = useState(false);
   const [isProjectsVisible, setIsProjectsVisible] = useState(false);
-  const [isTextEditMode, setIsTextEditMode] = useState(false);
-  const [editableCopy, setEditableCopy] = useState(readEditableCopy);
+  const [isContactVisible, setIsContactVisible] = useState(false);
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [editableCopy] = useState(readEditableCopy);
+  const topRef = useRef(null);
   const experienceRef = useRef(null);
   const projectsRef = useRef(null);
+  const contactRef = useRef(null);
   const introCardRef = useRef(null);
   const introTitleRef = useRef(null);
   const introTextRef = useRef(null);
@@ -112,6 +116,7 @@ function App() {
   const copyTimerRef = useRef(null);
   const starIdRef = useRef(0);
   const starFrameRef = useRef(0);
+  const scrollSnapLockRef = useRef(false);
 
   const getCopy = (copyId, fallback) => {
     if (Object.prototype.hasOwnProperty.call(editableCopy, copyId)) {
@@ -120,29 +125,6 @@ function App() {
 
     return fallback;
   };
-
-  const updateCopy = (copyId, value) => {
-    setEditableCopy((previous) => {
-      const nextCopy = { ...previous, [copyId]: value };
-      window.localStorage.setItem(editableCopyStorageKey, JSON.stringify(nextCopy));
-      return nextCopy;
-    });
-  };
-
-  const blockEditableClick = (event) => {
-    if (!isTextEditMode) return;
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
-  const editableTextProps = (copyId) => ({
-    contentEditable: isTextEditMode,
-    suppressContentEditableWarning: true,
-    spellCheck: false,
-    "data-editable-text": isTextEditMode ? "true" : undefined,
-    onBlur: (event) => updateCopy(copyId, event.currentTarget.innerText),
-    onClick: blockEditableClick,
-  });
 
   const EditableText = ({
     as: Tag = "span",
@@ -154,13 +136,37 @@ function App() {
   }) => (
     <Tag
       {...props}
-      {...editableTextProps(copyId)}
       className={className}
       ref={elementRef}
     >
       {getCopy(copyId, children)}
     </Tag>
   );
+
+  useEffect(() => {
+    const section = topRef.current;
+    if (!section) return undefined;
+
+    if (!("IntersectionObserver" in window)) {
+      const updateTopVisibility = () => {
+        setIsTopVisible(window.scrollY < window.innerHeight * 0.45);
+      };
+
+      updateTopVisibility();
+      window.addEventListener("scroll", updateTopVisibility, { passive: true });
+      return () => window.removeEventListener("scroll", updateTopVisibility);
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsTopVisible(entry.isIntersecting && entry.intersectionRatio > 0.45);
+      },
+      { threshold: [0, 0.45, 0.7] },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const section = experienceRef.current;
@@ -173,10 +179,7 @@ function App() {
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsExperienceVisible(true);
-          observer.disconnect();
-        }
+        setIsExperienceVisible(entry.isIntersecting);
       },
       { threshold: 0.36 },
     );
@@ -206,6 +209,96 @@ function App() {
 
     observer.observe(section);
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const section = contactRef.current;
+    if (!section) return undefined;
+
+    if (!("IntersectionObserver" in window)) {
+      setIsContactVisible(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsContactVisible(entry.isIntersecting);
+      },
+      { threshold: 0.38 },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const getSnapSections = () =>
+      ["top", "experience", "projects", "contact"]
+        .map((id) => document.getElementById(id))
+        .filter(Boolean);
+
+    const releaseLock = () => {
+      window.clearTimeout(scrollSnapLockRef.current);
+      scrollSnapLockRef.current = window.setTimeout(() => {
+        scrollSnapLockRef.current = false;
+      }, 760);
+    };
+
+    const handleWheel = (event) => {
+      if (
+        window.innerWidth <= 820 ||
+        event.ctrlKey ||
+        Math.abs(event.deltaY) < 18
+      ) {
+        return;
+      }
+
+      const sections = getSnapSections();
+      if (!sections.length) return;
+
+      event.preventDefault();
+      if (scrollSnapLockRef.current) return;
+
+      const direction = event.deltaY > 0 ? 1 : -1;
+      const scrollTop = window.scrollY;
+      const scrollTolerance = 24;
+      const currentIndex = sections.reduce((closestIndex, section, index) => {
+        const closestDistance = Math.abs(sections[closestIndex].offsetTop - scrollTop);
+        const sectionDistance = Math.abs(section.offsetTop - scrollTop);
+
+        return sectionDistance < closestDistance ? index : closestIndex;
+      }, 0);
+      const nextIndex =
+        direction > 0
+          ? sections.findIndex((section) => section.offsetTop > scrollTop + scrollTolerance)
+          : sections.reduce(
+              (targetIndex, section, index) =>
+                section.offsetTop < scrollTop - scrollTolerance ? index : targetIndex,
+              -1,
+            );
+      const boundedNextIndex =
+        nextIndex === -1
+          ? currentIndex
+          : Math.max(0, Math.min(sections.length - 1, nextIndex));
+
+      scrollSnapLockRef.current = true;
+      if (boundedNextIndex === currentIndex) {
+        releaseLock();
+        return;
+      }
+
+      window.scrollTo({
+        top: sections[boundedNextIndex].offsetTop,
+        behavior: "smooth",
+      });
+      releaseLock();
+    };
+
+    window.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", handleWheel);
+      window.clearTimeout(scrollSnapLockRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -266,19 +359,25 @@ function App() {
     event.currentTarget.style.setProperty("--title-y", `${y}%`);
   };
 
-  const moveExperienceTrail = (event) => {
+  const moveGlobalTrail = (event) => {
     const now = performance.now();
     if (now - starFrameRef.current < 34) return;
     starFrameRef.current = now;
 
-    const rect = event.currentTarget.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const section = experienceRef.current;
+    if (section && section.contains(event.target)) {
+      const rect = section.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      section.style.setProperty("--about-x", `${(x / rect.width) * 100}%`);
+      section.style.setProperty("--about-y", `${(y / rect.height) * 100}%`);
+    }
+
+    const x = event.clientX;
+    const y = event.clientY;
     const id = starIdRef.current;
     const size = 4 + (id % 4);
-
-    event.currentTarget.style.setProperty("--about-x", `${(x / rect.width) * 100}%`);
-    event.currentTarget.style.setProperty("--about-y", `${(y / rect.height) * 100}%`);
 
     const star = {
       id,
@@ -322,8 +421,21 @@ function App() {
     event.currentTarget.style.setProperty("--project-pan-y", "0px");
   };
 
-  const copyContact = async () => {
-    const currentContactValue = getCopy("contact.value", contactValue);
+  const jumpToSection = (event, href) => {
+    event.preventDefault();
+    const section = document.querySelector(href);
+    if (!section) return;
+
+    scrollSnapLockRef.current = false;
+    window.history.pushState(null, "", href);
+    window.scrollTo({
+      top: section.offsetTop,
+      behavior: "auto",
+    });
+  };
+
+  const copyValue = async (value) => {
+    const currentContactValue = value;
 
     try {
       await navigator.clipboard.writeText(currentContactValue);
@@ -339,29 +451,87 @@ function App() {
       document.body.removeChild(textArea);
     }
 
-    setCopyNotice(`已复制手机号/微信号：${currentContactValue}`);
+    setCopyNotice("复制成功，请尽快联系哦～");
     window.clearTimeout(copyTimerRef.current);
     copyTimerRef.current = window.setTimeout(() => {
       setCopyNotice("");
     }, 2200);
   };
 
+  const copyContact = () => copyValue(contactValue);
+
+  const activeProject = projects[activeProjectIndex];
+  const previousProjectIndex = (activeProjectIndex + projects.length - 1) % projects.length;
+  const nextProjectIndex = (activeProjectIndex + 1) % projects.length;
+  const previousProject = projects[previousProjectIndex];
+  const nextProject = projects[nextProjectIndex];
+
+  const changeProject = (nextIndex) => {
+    setActiveProjectIndex((nextIndex + projects.length) % projects.length);
+  };
+
   const currentDesignStatement = getCopy("hero.designStatement", designStatement);
 
   return (
-    <main className={isTextEditMode ? "is-copy-editing" : ""}>
-      <button
-        className={`copy-edit-toggle ${isTextEditMode ? "is-active" : ""}`}
-        type="button"
-        aria-pressed={isTextEditMode}
-        onClick={() => setIsTextEditMode((isEditing) => !isEditing)}
+    <main
+      onPointerMove={moveGlobalTrail}
+    >
+      <div className="global-ambient" aria-hidden="true">
+        <div className="global-aurora" />
+        <div className="global-rotating-glow" />
+        <div className="contact-starfield global-site-starfield">
+          {Array.from({ length: 32 }).map((_, index) => (
+            <span key={index} />
+          ))}
+        </div>
+      </div>
+      <div className="star-trails global-star-trails" aria-hidden="true">
+        {starTrails.map((star) => (
+          <span
+            key={star.id}
+            style={{
+              "--trail-x": `${star.x}px`,
+              "--trail-y": `${star.y}px`,
+              "--trail-size": `${star.size}px`,
+              "--trail-dx": `${star.driftX}px`,
+              "--trail-dy": `${star.driftY}px`,
+            }}
+          />
+        ))}
+      </div>
+      <header className={`site-nav ${isTopVisible ? "is-top-visible" : ""}`}>
+        <a className="hero-period" href="#top" aria-label="回到首页" onClick={(event) => jumpToSection(event, "#top")}>
+          <EditableText copyId="hero.period">UI&UX Designer 2022-2026</EditableText>
+        </a>
+        <div className="nav-actions">
+          <nav className="nav-links" aria-label="页面导航">
+            {navItems.map((item) => (
+              <a key={item.href} href={item.href} onClick={(event) => jumpToSection(event, item.href)}>
+                <EditableText copyId={`nav.${item.href}`}>{item.label}</EditableText>
+              </a>
+            ))}
+          </nav>
+          <button
+            className="nav-contact"
+            type="button"
+            onClick={copyContact}
+          >
+            <Phone size={18} />
+            <EditableText copyId="nav.contact">联系我</EditableText>
+          </button>
+        </div>
+      </header>
+      <div
+        className={`copy-toast ${copyNotice ? "is-visible" : ""}`}
+        role="status"
+        aria-live="polite"
       >
-        {isTextEditMode ? <Check size={18} /> : <PencilLine size={18} />}
-        <span>{isTextEditMode ? "完成编辑" : "文案编辑"}</span>
-      </button>
+        {copyNotice}
+      </div>
       <section
         className="hero"
         id="top"
+        ref={topRef}
         onPointerMove={moveHeroLight}
         onPointerLeave={(event) => {
           event.currentTarget.style.setProperty("--spot-x", "63%");
@@ -382,34 +552,10 @@ function App() {
         <div className="hero-beam" />
         <div className="hero-noise" />
         <div className="hero-right-glow" aria-hidden="true" />
-        <header className="site-nav">
-          <a className="hero-period" href="#top" aria-label="回到首页" onClick={blockEditableClick}>
-            <EditableText copyId="hero.period">UI&UX Designer 2022-2026</EditableText>
-          </a>
-          <div className="nav-actions">
-            <nav className="nav-links" aria-label="页面导航">
-              {navItems.map((item) => (
-                <a key={item.href} href={item.href} onClick={blockEditableClick}>
-                  <EditableText copyId={`nav.${item.href}`}>{item.label}</EditableText>
-                </a>
-              ))}
-            </nav>
-            <button
-              className="nav-contact"
-              type="button"
-              onClick={isTextEditMode ? blockEditableClick : copyContact}
-            >
-              <Phone size={18} />
-              <EditableText copyId="nav.contact">联系我</EditableText>
-            </button>
-          </div>
-        </header>
-        <div
-          className={`copy-toast ${copyNotice ? "is-visible" : ""}`}
-          role="status"
-          aria-live="polite"
-        >
-          {copyNotice}
+        <div className="contact-starfield hero-starfield" aria-hidden="true">
+          {Array.from({ length: 32 }).map((_, index) => (
+            <span key={index} />
+          ))}
         </div>
 
         <div className="hero-content">
@@ -420,32 +566,29 @@ function App() {
               copyId="hero.title"
               onPointerMove={moveTitleLight}
             >
-              孟肖依的个人网站
+              {heroTitle}
             </EditableText>
             <p
               className="hero-lead"
               aria-label={currentDesignStatement}
-              {...editableTextProps("hero.designStatement")}
             >
-              {isTextEditMode
-                ? currentDesignStatement
-                : [...currentDesignStatement].map((char, index) => (
-                    <span
-                      aria-hidden="true"
-                      key={`${char}-${index}`}
-                      style={{ "--char-index": index }}
-                    >
-                      {char}
-                    </span>
-                  ))}
+              {[...currentDesignStatement].map((char, index) => (
+                <span
+                  aria-hidden="true"
+                  key={`${char}-${index}`}
+                  style={{ "--char-index": index }}
+                >
+                  {char}
+                </span>
+              ))}
             </p>
           </div>
           <div className="hero-actions">
-            <a className="primary-action" href="#projects" onClick={blockEditableClick}>
+            <a className="primary-action" href="#projects">
               <EditableText copyId="hero.primaryAction">查看精选项目</EditableText>
               <ChevronRight size={18} />
             </a>
-            <a className="ghost-action" href="#experience" onClick={blockEditableClick}>
+            <a className="ghost-action" href="#experience">
               <EditableText copyId="hero.secondaryAction">了解经历</EditableText>
             </a>
           </div>
@@ -459,21 +602,12 @@ function App() {
         ref={experienceRef}
         className={`section experience-section ${isExperienceVisible ? "is-visible" : ""}`}
         id="experience"
-        onPointerMove={moveExperienceTrail}
       >
         <div className="personal-grid-bg" aria-hidden="true" />
-        <div className="star-trails" aria-hidden="true">
-          {starTrails.map((star) => (
-            <span
-              key={star.id}
-              style={{
-                "--trail-x": `${star.x}px`,
-                "--trail-y": `${star.y}px`,
-                "--trail-size": `${star.size}px`,
-                "--trail-dx": `${star.driftX}px`,
-                "--trail-dy": `${star.driftY}px`,
-              }}
-            />
+        <div className="experience-aurora" aria-hidden="true" />
+        <div className="contact-starfield experience-starfield" aria-hidden="true">
+          {Array.from({ length: 32 }).map((_, index) => (
+            <span key={index} />
           ))}
         </div>
         <div className="container personal-layout">
@@ -562,102 +696,185 @@ function App() {
         className={`section projects-section ${isProjectsVisible ? "is-visible" : ""}`}
         id="projects"
       >
-        <div className="container">
-          <div className="section-heading">
-            <EditableText as="p" className="section-kicker" copyId="projects.kicker">
-              Selected Work
-            </EditableText>
-            <EditableText as="h2" copyId="projects.title">精选项目</EditableText>
-            <EditableText as="p" copyId="projects.description">
-              先以 CRM 作为核心作品呈现，预留可扩展结构，后续可以继续补充真实截图、设计过程、关键页面和项目复盘。
-            </EditableText>
-          </div>
-          <div className="project-grid">
-            {projects.map((project, projectIndex) => (
-              <article
-                className="project-card"
-                key={project.title}
-                onPointerMove={moveProjectLight}
-                onPointerLeave={resetProjectLight}
+        <div className="project-glow-dock" aria-hidden="true" />
+        <div className="contact-starfield project-starfield" aria-hidden="true">
+          {Array.from({ length: 32 }).map((_, index) => (
+            <span key={index} />
+          ))}
+        </div>
+        <div className="container project-showcase-container">
+          <EditableText as="p" className="project-bg-word" copyId="projects.backgroundText">
+            SELECTED WORK
+          </EditableText>
+
+          <nav className="project-tabs" aria-label="项目分类">
+            {projectTabs.map((tab, tabIndex) => (
+              <button
+                type="button"
+                className={tabIndex === activeProjectIndex ? "is-active" : ""}
+                aria-pressed={tabIndex === activeProjectIndex}
+                onClick={() => changeProject(tabIndex)}
+                key={tab}
               >
-                <div className="project-image">
-                  <img src={project.image} alt={`${project.title}作品图片`} />
-                </div>
-                <div className="project-info">
+                <EditableText as="span" copyId={`projects.tab.${tabIndex}`}>
+                  {tab}
+                </EditableText>
+              </button>
+            ))}
+          </nav>
+
+          <div className="project-showcase">
+            <button
+              className="showcase-arrow showcase-arrow-left"
+              aria-label="上一个项目"
+              onClick={() => changeProject(previousProjectIndex)}
+            >
+              <ChevronRight size={28} strokeWidth={2.2} />
+            </button>
+
+            <article className="project-peek project-peek-left" aria-label="上一个项目预览">
+              <img src={previousProject.image} alt={`${previousProject.title}作品图片`} />
+              <div>
+                <EditableText as="span" copyId={`project.${previousProjectIndex}.meta`}>
+                  {previousProject.meta}
+                </EditableText>
+                <EditableText as="strong" copyId={`project.${previousProjectIndex}.title`}>
+                  {previousProject.title}
+                </EditableText>
+              </div>
+            </article>
+
+            <a
+              className="project-hero-card"
+              href={activeProject.detailUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`打开${activeProject.title}详情`}
+              onPointerMove={moveProjectLight}
+              onPointerLeave={resetProjectLight}
+            >
+              <img
+                className="project-cover-image"
+                key={activeProject.title}
+                src={activeProject.image}
+                alt={`${activeProject.title}作品封面`}
+              />
+            </a>
+
+            <article className="project-peek project-peek-right" aria-label="下一个项目预览">
+              <img src={nextProject.image} alt={`${nextProject.title}作品图片`} />
+              <div>
+                <EditableText as="span" copyId={`project.${nextProjectIndex}.meta`}>
+                  {nextProject.meta}
+                </EditableText>
+                <EditableText as="strong" copyId={`project.${nextProjectIndex}.title`}>
+                  {nextProject.title}
+                </EditableText>
+              </div>
+            </article>
+
+            <button
+              className="showcase-arrow showcase-arrow-right"
+              aria-label="下一个项目"
+              onClick={() => changeProject(nextProjectIndex)}
+            >
+              <ChevronRight size={28} strokeWidth={2.2} />
+            </button>
+          </div>
+
+          <div className="project-mobile-list" aria-label="项目作品列表">
+            {projects.map((project, projectIndex) => (
+              <a
+                className="project-mobile-card"
+                href={project.detailUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                key={project.title}
+              >
+                <img src={project.image} alt={`${project.title}作品封面`} />
+                <div>
                   <EditableText as="span" copyId={`project.${projectIndex}.meta`}>
                     {project.meta}
                   </EditableText>
-                  <EditableText as="h3" copyId={`project.${projectIndex}.title`}>
+                  <EditableText as="strong" copyId={`project.${projectIndex}.title`}>
                     {project.title}
                   </EditableText>
-                  <EditableText as="p" copyId={`project.${projectIndex}.description`}>
-                    {project.description}
-                  </EditableText>
-                  <div className="tag-row">
-                    {project.tags.map((tag, tagIndex) => (
-                      <EditableText as="span" copyId={`project.${projectIndex}.tag.${tagIndex}`} key={tag}>
-                        {tag}
-                      </EditableText>
-                    ))}
-                  </div>
                 </div>
-              </article>
+              </a>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section strengths-section" id="strengths">
-        <div className="container">
-          <div className="section-heading compact">
-            <EditableText as="p" className="section-kicker" copyId="strengths.kicker">
-              Strengths
-            </EditableText>
-            <EditableText as="h2" copyId="strengths.title">个人优势</EditableText>
-          </div>
-          <div className="strength-grid">
-            {strengths.map(({ icon: Icon, title, copy }, strengthIndex) => (
-              <article className="strength-card" key={title}>
-                <div className="icon-box">
-                  <Icon size={24} />
-                </div>
-                <EditableText as="h3" copyId={`strength.${strengthIndex}.title`}>
-                  {title}
-                </EditableText>
-                <EditableText as="p" copyId={`strength.${strengthIndex}.copy`}>
-                  {copy}
-                </EditableText>
-              </article>
-            ))}
-          </div>
+      <section
+        ref={contactRef}
+        className={`contact-section ${isContactVisible ? "is-visible" : ""}`}
+        id="contact"
+      >
+        <img className="contact-bg-image" src="/assets/contact-ending-bg.png" alt="" aria-hidden="true" />
+        <div className="contact-starfield" aria-hidden="true">
+          {Array.from({ length: 32 }).map((_, index) => (
+            <span key={index} />
+          ))}
         </div>
-      </section>
-
-      <section className="contact-section" id="contact">
         <div className="container contact-layout">
-          <div>
-            <EditableText as="p" className="section-kicker" copyId="contact.kicker">
-              Contact
-            </EditableText>
-            <EditableText as="h2" copyId="contact.title">
-              期待把下一段产品体验，设计得更清楚也更有质感。
+          <div className="contact-thanks">
+            <img className="contact-thanks-line" src="/assets/contact-thanks-line.png" alt="" aria-hidden="true" />
+            <EditableText
+              as="h2"
+              className="hero-title contact-thanks-title"
+              copyId="contact.title"
+              onPointerMove={moveTitleLight}
+            >
+              感谢观看
             </EditableText>
           </div>
           <div className="contact-panel">
-            <button type="button" onClick={isTextEditMode ? blockEditableClick : copyContact}>
-              <Phone size={20} />
-              <EditableText as="em" copyId="contact.phoneLabel">手机</EditableText>
-              <EditableText as="em" copyId="contact.value">{contactValue}</EditableText>
-            </button>
-            <button type="button" onClick={isTextEditMode ? blockEditableClick : copyContact}>
-              <MessageCircle size={20} />
-              <EditableText as="em" copyId="contact.wechatLabel">微信</EditableText>
-              <EditableText as="em" copyId="contact.value">{contactValue}</EditableText>
-            </button>
-            <span>
-              <BriefcaseBusiness size={20} />
-              <EditableText as="em" copyId="contact.role">UI/UX Designer · CRM / B2B SaaS</EditableText>
-            </span>
+            <img className="contact-qr" src="/assets/contact-wechat-qr.png" alt="微信二维码" />
+            <div className="contact-info">
+              <div className="contact-row">
+                <Phone size={18} />
+                <EditableText as="span" copyId="contact.phoneLabel">电话</EditableText>
+                <EditableText as="em" copyId="contact.phoneDisplay">{contactPhoneDisplay}</EditableText>
+                <div className="contact-copy-wrap">
+                  <button
+                    type="button"
+                    aria-label="复制手机号"
+                    onClick={() => copyValue(contactValue)}
+                  >
+                    <Copy size={16} />
+                  </button>
+                </div>
+              </div>
+              <div className="contact-row">
+                <MessageCircle size={18} />
+                <EditableText as="span" copyId="contact.wechatLabel">微信</EditableText>
+                <EditableText as="em" copyId="contact.wechatDisplay">{contactPhoneDisplay}</EditableText>
+                <div className="contact-copy-wrap">
+                  <button
+                    type="button"
+                    aria-label="复制微信号"
+                    onClick={() => copyValue(contactValue)}
+                  >
+                    <Copy size={16} />
+                  </button>
+                </div>
+              </div>
+              <div className="contact-row">
+                <Mail size={18} />
+                <EditableText as="span" copyId="contact.emailLabel">邮箱</EditableText>
+                <EditableText as="em" copyId="contact.email">{contactEmail}</EditableText>
+                <div className="contact-copy-wrap">
+                  <button
+                    type="button"
+                    aria-label="复制邮箱"
+                    onClick={() => copyValue(contactEmail)}
+                  >
+                    <Copy size={16} />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>

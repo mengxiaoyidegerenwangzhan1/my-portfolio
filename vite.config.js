@@ -8,6 +8,7 @@ export default defineConfig({
     react(),
     sites(),
     cloudflare({
+      inspectorPort: false,
       viteEnvironment: {
         name: "server",
       },
