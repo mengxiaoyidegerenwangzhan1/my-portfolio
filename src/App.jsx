@@ -5,6 +5,7 @@ import {
   Mail,
   MessageCircle,
   Phone,
+  X,
 } from "lucide-react";
 
 const navItems = [
@@ -30,38 +31,42 @@ const workExperiences = [
 
 const projects = [
   {
+    id: "crm",
     title: "CRM销售管理系统",
     description:
       "围绕销售线索、客户跟进、商机推进与数据看板搭建的一套 B 端产品设计，强调高频任务效率、信息层级与跨角色协作。",
     image: assetPath("/assets/project-crm-cover.png"),
-    detailUrl: assetPath("/assets/crm-portfolio.pdf"),
+    gallery: portfolioPages("portfolio-crm", 39, 2),
     tags: ["CRM", "SaaS", "B端体验", "数据看板"],
     meta: "PC端",
   },
   {
+    id: "xiangchuang",
     title: "翔创官网",
     description:
       "围绕企业品牌展示、业务介绍与线索转化进行官网体验优化，后续可补充视觉稿、页面结构与上线沉淀。",
     image: assetPath("/assets/project-xiangchuang-cover.png"),
-    detailUrl: "https://innovationai.com.cn/#/",
+    externalUrl: "https://innovationai.com.cn/#/",
     tags: ["官网设计", "品牌表达", "转化链路"],
     meta: "Web端",
   },
   {
+    id: "rongchang",
     title: "荣昌数智贷",
     description:
       "面向金融业务场景的产品体验设计，后续可补充核心流程、风控信息层级、表单体验与关键页面截图。",
     image: assetPath("/assets/project-rongchang-cover.png?v=20260829"),
-    detailUrl: assetPath("/assets/rongchang-loan-app-portfolio.pdf?v=20260829"),
+    gallery: portfolioPages("portfolio-rongchang", 7),
     tags: ["金融产品", "流程设计", "表单体验"],
     meta: "移动端",
   },
   {
+    id: "dashboard",
     title: "数据大屏",
     description:
       "聚焦数据指标、驾驶舱布局与动态展示节奏，后续可补充大屏视觉、数据模块与动效说明。",
     image: assetPath("/assets/project-dashboard-cover.png"),
-    detailUrl: assetPath("/assets/dashboard-portfolio.pdf"),
+    gallery: portfolioPages("portfolio-dashboard", 7),
     tags: ["数据可视化", "大屏设计", "指标看板"],
     meta: "大屏端",
   },
@@ -79,6 +84,13 @@ const editableCopyStorageKey = "mengxiaoyi-portfolio-copy";
 
 function assetPath(path) {
   return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+}
+
+function portfolioPages(folder, count, padLength = 0) {
+  return Array.from({ length: count }, (_, index) => {
+    const pageNumber = String(index + 1).padStart(padLength, "0");
+    return assetPath(`/assets/${folder}/page-${pageNumber}.jpg`);
+  });
 }
 
 const readEditableCopy = () => {
@@ -108,6 +120,7 @@ function App() {
   const [isProjectsVisible, setIsProjectsVisible] = useState(false);
   const [isContactVisible, setIsContactVisible] = useState(false);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const [activePortfolio, setActivePortfolio] = useState(null);
   const [editableCopy] = useState(readEditableCopy);
   const topRef = useRef(null);
   const experienceRef = useRef(null);
@@ -236,6 +249,25 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (!activePortfolio) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") {
+        setActivePortfolio(null);
+      }
+    };
+
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [activePortfolio]);
+
+  useEffect(() => {
     const getSnapSections = () =>
       ["top", "experience", "projects", "contact"]
         .map((id) => document.getElementById(id))
@@ -250,6 +282,7 @@ function App() {
 
     const handleWheel = (event) => {
       if (
+        event.target.closest(".portfolio-viewer") ||
         window.innerWidth <= 820 ||
         event.ctrlKey ||
         Math.abs(event.deltaY) < 18
@@ -475,6 +508,7 @@ function App() {
   };
 
   const currentDesignStatement = getCopy("hero.designStatement", designStatement);
+  const ProjectHeroElement = activeProject.externalUrl ? "a" : "button";
 
   return (
     <main
@@ -749,11 +783,18 @@ function App() {
               </div>
             </article>
 
-            <a
+            <ProjectHeroElement
               className="project-hero-card"
-              href={activeProject.detailUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              {...(activeProject.externalUrl
+                ? {
+                    href: activeProject.externalUrl,
+                    target: "_blank",
+                    rel: "noopener noreferrer",
+                  }
+                : {
+                    type: "button",
+                    onClick: () => setActivePortfolio(activeProject),
+                  })}
               aria-label={`打开${activeProject.title}详情`}
               onPointerMove={moveProjectLight}
               onPointerLeave={resetProjectLight}
@@ -764,7 +805,7 @@ function App() {
                 src={activeProject.image}
                 alt={`${activeProject.title}作品封面`}
               />
-            </a>
+            </ProjectHeroElement>
 
             <article className="project-peek project-peek-right" aria-label="下一个项目预览">
               <img src={nextProject.image} alt={`${nextProject.title}作品图片`} />
@@ -789,11 +830,16 @@ function App() {
 
           <div className="project-mobile-list" aria-label="项目作品列表">
             {projects.map((project, projectIndex) => (
-              <a
+              <button
                 className="project-mobile-card"
-                href={project.detailUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+                type="button"
+                onClick={() => {
+                  if (project.externalUrl) {
+                    window.open(project.externalUrl, "_blank", "noopener,noreferrer");
+                    return;
+                  }
+                  setActivePortfolio(project);
+                }}
                 key={project.title}
               >
                 <img src={project.image} alt={`${project.title}作品封面`} />
@@ -805,7 +851,7 @@ function App() {
                     {project.title}
                   </EditableText>
                 </div>
-              </a>
+              </button>
             ))}
           </div>
         </div>
@@ -883,6 +929,44 @@ function App() {
           </div>
         </div>
       </section>
+
+      {activePortfolio && (
+        <div
+          className="portfolio-viewer"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${activePortfolio.title}作品集预览`}
+        >
+          <div className="portfolio-viewer-top">
+            <div>
+              <span>{activePortfolio.meta}</span>
+              <strong>{activePortfolio.title}</strong>
+            </div>
+            <button
+              type="button"
+              className="portfolio-viewer-close"
+              onClick={() => setActivePortfolio(null)}
+              aria-label="关闭作品集预览"
+            >
+              <X size={22} />
+            </button>
+          </div>
+          <div className="portfolio-viewer-pages">
+            {activePortfolio.gallery.map((page, index) => (
+              <figure className="portfolio-viewer-page" key={page}>
+                <img
+                  src={page}
+                  alt={`${activePortfolio.title}作品集第${index + 1}页`}
+                  loading={index < 2 ? "eager" : "lazy"}
+                  decoding="async"
+                  draggable="false"
+                  onContextMenu={(event) => event.preventDefault()}
+                />
+              </figure>
+            ))}
+          </div>
+        </div>
+      )}
     </main>
   );
 }
