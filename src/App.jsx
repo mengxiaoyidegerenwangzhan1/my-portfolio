@@ -5,7 +5,6 @@ import {
   Mail,
   MessageCircle,
   Phone,
-  X,
 } from "lucide-react";
 
 const navItems = [
@@ -93,6 +92,18 @@ function portfolioPages(folder, count, padLength = 0) {
   });
 }
 
+function projectLink(project) {
+  if (project.externalUrl) return project.externalUrl;
+  return assetPath(`/?portfolio=${encodeURIComponent(project.id)}`);
+}
+
+function getPortfolioProjectFromUrl() {
+  if (typeof window === "undefined") return null;
+
+  const projectId = new URLSearchParams(window.location.search).get("portfolio");
+  return projects.find((project) => project.id === projectId && project.gallery) || null;
+}
+
 const readEditableCopy = () => {
   if (typeof window === "undefined") return {};
 
@@ -120,7 +131,6 @@ function App() {
   const [isProjectsVisible, setIsProjectsVisible] = useState(false);
   const [isContactVisible, setIsContactVisible] = useState(false);
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
-  const [activePortfolio, setActivePortfolio] = useState(null);
   const [editableCopy] = useState(readEditableCopy);
   const topRef = useRef(null);
   const experienceRef = useRef(null);
@@ -249,25 +259,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!activePortfolio) return undefined;
-
-    const previousOverflow = document.body.style.overflow;
-    const closeOnEscape = (event) => {
-      if (event.key === "Escape") {
-        setActivePortfolio(null);
-      }
-    };
-
-    document.body.style.overflow = "hidden";
-    window.addEventListener("keydown", closeOnEscape);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener("keydown", closeOnEscape);
-    };
-  }, [activePortfolio]);
-
-  useEffect(() => {
     const getSnapSections = () =>
       ["top", "experience", "projects", "contact"]
         .map((id) => document.getElementById(id))
@@ -282,7 +273,6 @@ function App() {
 
     const handleWheel = (event) => {
       if (
-        event.target.closest(".portfolio-viewer") ||
         window.innerWidth <= 820 ||
         event.ctrlKey ||
         Math.abs(event.deltaY) < 18
@@ -508,7 +498,17 @@ function App() {
   };
 
   const currentDesignStatement = getCopy("hero.designStatement", designStatement);
-  const ProjectHeroElement = activeProject.externalUrl ? "a" : "button";
+  const portfolioProject = getPortfolioProjectFromUrl();
+
+  if (portfolioProject) {
+    return (
+      <PortfolioDetailPage
+        project={portfolioProject}
+        copyNotice={copyNotice}
+        onContactClick={copyContact}
+      />
+    );
+  }
 
   return (
     <main
@@ -783,18 +783,11 @@ function App() {
               </div>
             </article>
 
-            <ProjectHeroElement
+            <a
               className="project-hero-card"
-              {...(activeProject.externalUrl
-                ? {
-                    href: activeProject.externalUrl,
-                    target: "_blank",
-                    rel: "noopener noreferrer",
-                  }
-                : {
-                    type: "button",
-                    onClick: () => setActivePortfolio(activeProject),
-                  })}
+              href={projectLink(activeProject)}
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label={`打开${activeProject.title}详情`}
               onPointerMove={moveProjectLight}
               onPointerLeave={resetProjectLight}
@@ -805,7 +798,7 @@ function App() {
                 src={activeProject.image}
                 alt={`${activeProject.title}作品封面`}
               />
-            </ProjectHeroElement>
+            </a>
 
             <article className="project-peek project-peek-right" aria-label="下一个项目预览">
               <img src={nextProject.image} alt={`${nextProject.title}作品图片`} />
@@ -830,16 +823,11 @@ function App() {
 
           <div className="project-mobile-list" aria-label="项目作品列表">
             {projects.map((project, projectIndex) => (
-              <button
+              <a
                 className="project-mobile-card"
-                type="button"
-                onClick={() => {
-                  if (project.externalUrl) {
-                    window.open(project.externalUrl, "_blank", "noopener,noreferrer");
-                    return;
-                  }
-                  setActivePortfolio(project);
-                }}
+                href={projectLink(project)}
+                target="_blank"
+                rel="noopener noreferrer"
                 key={project.title}
               >
                 <img src={project.image} alt={`${project.title}作品封面`} />
@@ -851,7 +839,7 @@ function App() {
                     {project.title}
                   </EditableText>
                 </div>
-              </button>
+              </a>
             ))}
           </div>
         </div>
@@ -930,43 +918,59 @@ function App() {
         </div>
       </section>
 
-      {activePortfolio && (
-        <div
-          className="portfolio-viewer"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${activePortfolio.title}作品集预览`}
-        >
-          <div className="portfolio-viewer-top">
-            <div>
-              <span>{activePortfolio.meta}</span>
-              <strong>{activePortfolio.title}</strong>
-            </div>
-            <button
-              type="button"
-              className="portfolio-viewer-close"
-              onClick={() => setActivePortfolio(null)}
-              aria-label="关闭作品集预览"
-            >
-              <X size={22} />
-            </button>
-          </div>
-          <div className="portfolio-viewer-pages">
-            {activePortfolio.gallery.map((page, index) => (
-              <figure className="portfolio-viewer-page" key={page}>
-                <img
-                  src={page}
-                  alt={`${activePortfolio.title}作品集第${index + 1}页`}
-                  loading={index < 2 ? "eager" : "lazy"}
-                  decoding="async"
-                  draggable="false"
-                  onContextMenu={(event) => event.preventDefault()}
-                />
-              </figure>
-            ))}
-          </div>
+    </main>
+  );
+}
+
+function PortfolioDetailPage({ project, copyNotice, onContactClick }) {
+  return (
+    <main className="portfolio-detail-page">
+      <div className="global-ambient" aria-hidden="true">
+        <div className="global-aurora" />
+        <div className="global-rotating-glow" />
+        <div className="contact-starfield global-site-starfield">
+          {Array.from({ length: 32 }).map((_, index) => (
+            <span key={index} />
+          ))}
         </div>
-      )}
+      </div>
+
+      <button
+        className="portfolio-detail-contact"
+        type="button"
+        onClick={onContactClick}
+      >
+        <Phone size={18} />
+        联系我
+      </button>
+
+      <div
+        className={`copy-toast copy-toast-center ${copyNotice ? "is-visible" : ""}`}
+        role="status"
+        aria-live="polite"
+      >
+        {copyNotice}
+      </div>
+
+      <header className="portfolio-detail-heading">
+        <span>{project.meta}</span>
+        <h1>{project.title}</h1>
+      </header>
+
+      <div className="portfolio-detail-pages">
+        {project.gallery.map((page, index) => (
+          <figure className="portfolio-detail-page-frame" key={page}>
+            <img
+              src={page}
+              alt={`${project.title}作品集第${index + 1}页`}
+              loading={index < 2 ? "eager" : "lazy"}
+              decoding="async"
+              draggable="false"
+              onContextMenu={(event) => event.preventDefault()}
+            />
+          </figure>
+        ))}
+      </div>
     </main>
   );
 }
