@@ -72,6 +72,10 @@ video {
   max-width: 100%;
 }
 
+img {
+  height: auto;
+}
+
 main {
   position: relative;
   overflow: hidden;
@@ -2969,6 +2973,7 @@ h3 {
 .portfolio-detail-page-frame {
   min-height: calc(100svh - 116px);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   place-items: center;
   scroll-snap-align: start;
   scroll-snap-stop: always;
@@ -2978,7 +2983,7 @@ h3 {
 
 .portfolio-detail-page-frame img {
   width: auto;
-  max-width: min(1500px, 94vw);
+  max-width: min(1500px, 100%);
   max-height: calc(100svh - 154px);
   border-radius: 12px;
   object-fit: contain;

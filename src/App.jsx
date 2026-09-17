@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import imageAssets from "./image-assets.json";
 import {
   ChevronRight,
   Copy,
@@ -82,7 +83,100 @@ const contactEmail = "443370547@qq.com";
 const editableCopyStorageKey = "mengxiaoyi-portfolio-copy";
 
 function assetPath(path) {
-  return `${import.meta.env.BASE_URL}${path.replace(/^\/+/, "")}`;
+  const optimized = imageAssets[path.split("?")[0]];
+  return `${import.meta.env.BASE_URL}${(optimized?.src || path).replace(/^\/+/, "")}`;
+}
+
+const imageMetadata = Object.fromEntries(
+  Object.values(imageAssets).map((entry) => [assetPath(entry.src), entry]),
+);
+
+function OptimizedImage({ src, loading = "lazy", sizes = "100vw", ...props }) {
+  const imageRef = useRef(null);
+  const nearViewport = useNearViewport(imageRef);
+  const shouldLoad = loading === "eager" || nearViewport;
+  const metadata = imageMetadata[src];
+  return (
+    <img
+      {...props}
+      ref={imageRef}
+      src={shouldLoad ? src : undefined}
+      width={metadata?.width}
+      height={metadata?.height}
+      srcSet={shouldLoad && metadata?.small
+        ? `${assetPath(metadata.small)} ${metadata.smallWidth}w, ${src} ${metadata.width}w`
+        : undefined}
+      sizes={metadata?.small ? sizes : undefined}
+      loading={loading}
+      decoding="async"
+    />
+  );
+}
+
+function useNearViewport(ref) {
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    if (!ref.current) return;
+    if (!("IntersectionObserver" in window)) {
+      setNear(true);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setNear(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: "400px" });
+    observer.observe(ref.current);
+    return () => observer.disconnect();
+  }, [ref]);
+  return near;
+}
+
+function HeroBackground() {
+  const [posterReady, setPosterReady] = useState(false);
+  const [loadVideo, setLoadVideo] = useState(false);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const connection = navigator.connection;
+    if (!posterReady || connection?.saveData || /(^|-)2g$/.test(connection?.effectiveType || "") ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Let the poster and text paint before downloading decorative motion.
+    const timer = window.setTimeout(() => setLoadVideo(true), 1200);
+    return () => window.clearTimeout(timer);
+  }, [posterReady]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !loadVideo) return;
+    let visible = false;
+    const updatePlayback = () => {
+      if (visible && !document.hidden) video.play().catch(() => {});
+      else video.pause();
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      updatePlayback();
+    });
+    observer.observe(video);
+    document.addEventListener("visibilitychange", updatePlayback);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", updatePlayback);
+      video.pause();
+    };
+  }, [loadVideo]);
+
+  return (
+    <>
+      <OptimizedImage className="hero-video" src={assetPath("/assets/hero-poster.png")}
+        loading="eager" fetchPriority="high" alt="" aria-hidden="true"
+        onLoad={() => setPosterReady(true)} onError={() => setPosterReady(true)} />
+      {loadVideo && <video ref={videoRef} className="hero-video" muted loop playsInline
+        preload="none" aria-hidden="true" src={assetPath("/assets/hero-background.mp4")} />}
+    </>
+  );
 }
 
 function portfolioPages(folder, count, padLength = 0) {
@@ -136,6 +230,8 @@ function App() {
   const experienceRef = useRef(null);
   const projectsRef = useRef(null);
   const contactRef = useRef(null);
+  const experienceNear = useNearViewport(experienceRef);
+  const projectsNear = useNearViewport(projectsRef);
   const introCardRef = useRef(null);
   const introTitleRef = useRef(null);
   const introTextRef = useRef(null);
@@ -513,7 +609,8 @@ function App() {
   return (
     <main
       onPointerMove={moveGlobalTrail}
-      style={{ "--about-floor-bg": `url("${assetPath("/assets/about-floor-bg.png")}")` }}
+      style={{ "--about-floor-bg": experienceNear || projectsNear
+        ? `url("${assetPath("/assets/about-floor-bg.png")}")` : "none" }}
     >
       <div className="global-ambient" aria-hidden="true">
         <div className="global-aurora" />
@@ -577,16 +674,7 @@ function App() {
           event.currentTarget.style.setProperty("--spot-y", "49%");
         }}
       >
-        <video
-          className="hero-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-          poster={assetPath("/assets/hero-poster.png")}
-        >
-          <source src={assetPath("/assets/hero-background.mp4")} type="video/mp4" />
-        </video>
+        <HeroBackground />
         <div className="hero-gradient" />
         <div className="hero-beam" />
         <div className="hero-noise" />
@@ -678,7 +766,7 @@ function App() {
                 </strong>
               </div>
               <div className="id-photo-card">
-                <img src={assetPath("/assets/profile-id-photo.png")} alt="孟肖依证件照" />
+                <OptimizedImage src={assetPath("/assets/profile-id-photo.png")} alt="孟肖依证件照" />
               </div>
             </article>
 
@@ -698,7 +786,7 @@ function App() {
             <EditableText as="h3" copyId="career.title">工作经历</EditableText>
             <div className="career-timeline">
               <div className="career-line">
-                <img src={assetPath("/assets/career-glow-arrow.png")} alt="" aria-hidden="true" />
+                <OptimizedImage src={assetPath("/assets/career-glow-arrow.png")} alt="" aria-hidden="true" />
               </div>
               <div className="career-list">
                 {workExperiences.map((item, itemIndex) => (
@@ -772,7 +860,7 @@ function App() {
             </button>
 
             <article className="project-peek project-peek-left" aria-label="上一个项目预览">
-              <img src={previousProject.image} alt={`${previousProject.title}作品图片`} />
+              <OptimizedImage src={previousProject.image} alt={`${previousProject.title}作品图片`} />
               <div>
                 <EditableText as="span" copyId={`project.${previousProjectIndex}.meta`}>
                   {previousProject.meta}
@@ -792,7 +880,7 @@ function App() {
               onPointerMove={moveProjectLight}
               onPointerLeave={resetProjectLight}
             >
-              <img
+              <OptimizedImage
                 className="project-cover-image"
                 key={activeProject.title}
                 src={activeProject.image}
@@ -801,7 +889,7 @@ function App() {
             </a>
 
             <article className="project-peek project-peek-right" aria-label="下一个项目预览">
-              <img src={nextProject.image} alt={`${nextProject.title}作品图片`} />
+              <OptimizedImage src={nextProject.image} alt={`${nextProject.title}作品图片`} />
               <div>
                 <EditableText as="span" copyId={`project.${nextProjectIndex}.meta`}>
                   {nextProject.meta}
@@ -830,7 +918,7 @@ function App() {
                 rel="noopener noreferrer"
                 key={project.title}
               >
-                <img src={project.image} alt={`${project.title}作品封面`} />
+                <OptimizedImage src={project.image} alt={`${project.title}作品封面`} />
                 <div>
                   <EditableText as="span" copyId={`project.${projectIndex}.meta`}>
                     {project.meta}
@@ -850,7 +938,7 @@ function App() {
         className={`contact-section ${isContactVisible ? "is-visible" : ""}`}
         id="contact"
       >
-        <img className="contact-bg-image" src={assetPath("/assets/contact-ending-bg.png")} alt="" aria-hidden="true" />
+        <OptimizedImage className="contact-bg-image" src={assetPath("/assets/contact-ending-bg.png")} alt="" aria-hidden="true" />
         <div className="contact-starfield" aria-hidden="true">
           {Array.from({ length: 32 }).map((_, index) => (
             <span key={index} />
@@ -858,7 +946,7 @@ function App() {
         </div>
         <div className="container contact-layout">
           <div className="contact-thanks">
-            <img className="contact-thanks-line" src={assetPath("/assets/contact-thanks-line.png")} alt="" aria-hidden="true" />
+            <OptimizedImage className="contact-thanks-line" src={assetPath("/assets/contact-thanks-line.png")} alt="" aria-hidden="true" />
             <EditableText
               as="h2"
               className="hero-title contact-thanks-title"
@@ -869,7 +957,7 @@ function App() {
             </EditableText>
           </div>
           <div className="contact-panel">
-            <img className="contact-qr" src={assetPath("/assets/contact-wechat-qr.png")} alt="微信二维码" />
+            <OptimizedImage className="contact-qr" src={assetPath("/assets/contact-wechat-qr.png")} alt="微信二维码" />
             <div className="contact-info">
               <div className="contact-row">
                 <Phone size={18} />
@@ -960,10 +1048,12 @@ function PortfolioDetailPage({ project, copyNotice, onContactClick }) {
       <div className="portfolio-detail-pages">
         {project.gallery.map((page, index) => (
           <figure className="portfolio-detail-page-frame" key={page}>
-            <img
+            <OptimizedImage
               src={page}
               alt={`${project.title}作品集第${index + 1}页`}
-              loading={index < 2 ? "eager" : "lazy"}
+              loading={index === 0 ? "eager" : "lazy"}
+              fetchPriority={index === 0 ? "high" : "auto"}
+              sizes="(max-width: 900px) 94vw, 1500px"
               decoding="async"
               draggable="false"
               onContextMenu={(event) => event.preventDefault()}

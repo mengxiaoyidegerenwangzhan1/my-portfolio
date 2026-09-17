@@ -1,0 +1,451 @@
+{
+  "/assets/about-floor-bg.png": {
+    "src": "/assets/optimized/about-floor-bg.webp",
+    "width": 1920,
+    "height": 1080
+  },
+  "/assets/career-glow-arrow.png": {
+    "src": "/assets/optimized/career-glow-arrow.webp",
+    "width": 78,
+    "height": 1071
+  },
+  "/assets/contact-ending-bg.png": {
+    "src": "/assets/optimized/contact-ending-bg.webp",
+    "width": 1920,
+    "height": 1080
+  },
+  "/assets/contact-thanks-line.png": {
+    "src": "/assets/optimized/contact-thanks-line.webp",
+    "width": 1920,
+    "height": 59
+  },
+  "/assets/contact-wechat-qr.png": {
+    "src": "/assets/optimized/contact-wechat-qr.webp",
+    "width": 292,
+    "height": 292
+  },
+  "/assets/hero-poster.png": {
+    "src": "/assets/optimized/hero-poster.webp",
+    "width": 1920,
+    "height": 1080
+  },
+  "/assets/portfolio-crm/page-01.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-01.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-01-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-02.jpg": {
+    "src": "/assets/portfolio-crm/page-02.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-02-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-03.jpg": {
+    "src": "/assets/portfolio-crm/page-03.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-03-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-04.jpg": {
+    "src": "/assets/portfolio-crm/page-04.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-04-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-05.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-05.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-05-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-06.jpg": {
+    "src": "/assets/portfolio-crm/page-06.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-06-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-07.jpg": {
+    "src": "/assets/portfolio-crm/page-07.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-07-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-08.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-08.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-08-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-09.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-09.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-09-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-10.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-10.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-10-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-11.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-11.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-11-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-12.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-12.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-12-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-13.jpg": {
+    "src": "/assets/portfolio-crm/page-13.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-13-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-14.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-14.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-14-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-15.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-15.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-15-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-16.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-16.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-16-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-17.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-17.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-17-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-18.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-18.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-18-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-19.jpg": {
+    "src": "/assets/portfolio-crm/page-19.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-19-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-20.jpg": {
+    "src": "/assets/portfolio-crm/page-20.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-20-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-21.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-21.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-21-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-22.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-22.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-22-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-23.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-23.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-23-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-24.jpg": {
+    "src": "/assets/portfolio-crm/page-24.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-24-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-25.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-25.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-25-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-26.jpg": {
+    "src": "/assets/portfolio-crm/page-26.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-26-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-27.jpg": {
+    "src": "/assets/portfolio-crm/page-27.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-27-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-28.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-28.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-28-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-29.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-29.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-29-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-30.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-30.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-30-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-31.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-31.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-31-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-32.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-32.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-32-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-33.jpg": {
+    "src": "/assets/portfolio-crm/page-33.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-33-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-34.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-34.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-34-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-35.jpg": {
+    "src": "/assets/optimized/portfolio-crm/page-35.webp",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-35-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-36.jpg": {
+    "src": "/assets/portfolio-crm/page-36.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-36-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-37.jpg": {
+    "src": "/assets/portfolio-crm/page-37.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-37-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-38.jpg": {
+    "src": "/assets/portfolio-crm/page-38.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-38-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-crm/page-39.jpg": {
+    "src": "/assets/portfolio-crm/page-39.jpg",
+    "width": 2560,
+    "height": 1440,
+    "small": "/assets/optimized/portfolio-crm/page-39-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-dashboard/page-1.jpg": {
+    "src": "/assets/portfolio-dashboard/page-1.jpg",
+    "width": 1920,
+    "height": 1040,
+    "small": "/assets/optimized/portfolio-dashboard/page-1-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-dashboard/page-2.jpg": {
+    "src": "/assets/portfolio-dashboard/page-2.jpg",
+    "width": 1920,
+    "height": 1040,
+    "small": "/assets/optimized/portfolio-dashboard/page-2-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-dashboard/page-3.jpg": {
+    "src": "/assets/portfolio-dashboard/page-3.jpg",
+    "width": 1920,
+    "height": 1040,
+    "small": "/assets/optimized/portfolio-dashboard/page-3-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-dashboard/page-4.jpg": {
+    "src": "/assets/portfolio-dashboard/page-4.jpg",
+    "width": 1920,
+    "height": 1040,
+    "small": "/assets/optimized/portfolio-dashboard/page-4-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-dashboard/page-5.jpg": {
+    "src": "/assets/portfolio-dashboard/page-5.jpg",
+    "width": 1920,
+    "height": 1040,
+    "small": "/assets/optimized/portfolio-dashboard/page-5-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-dashboard/page-6.jpg": {
+    "src": "/assets/portfolio-dashboard/page-6.jpg",
+    "width": 1920,
+    "height": 1040,
+    "small": "/assets/optimized/portfolio-dashboard/page-6-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-dashboard/page-7.jpg": {
+    "src": "/assets/optimized/portfolio-dashboard/page-7.webp",
+    "width": 1920,
+    "height": 1040,
+    "small": "/assets/optimized/portfolio-dashboard/page-7-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-rongchang/page-1.jpg": {
+    "src": "/assets/portfolio-rongchang/page-1.jpg",
+    "width": 1920,
+    "height": 1081,
+    "small": "/assets/optimized/portfolio-rongchang/page-1-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-rongchang/page-2.jpg": {
+    "src": "/assets/optimized/portfolio-rongchang/page-2.webp",
+    "width": 1920,
+    "height": 1081,
+    "small": "/assets/optimized/portfolio-rongchang/page-2-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-rongchang/page-3.jpg": {
+    "src": "/assets/optimized/portfolio-rongchang/page-3.webp",
+    "width": 1920,
+    "height": 1081,
+    "small": "/assets/optimized/portfolio-rongchang/page-3-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-rongchang/page-4.jpg": {
+    "src": "/assets/optimized/portfolio-rongchang/page-4.webp",
+    "width": 1920,
+    "height": 1081,
+    "small": "/assets/optimized/portfolio-rongchang/page-4-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-rongchang/page-5.jpg": {
+    "src": "/assets/optimized/portfolio-rongchang/page-5.webp",
+    "width": 1920,
+    "height": 1081,
+    "small": "/assets/optimized/portfolio-rongchang/page-5-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-rongchang/page-6.jpg": {
+    "src": "/assets/optimized/portfolio-rongchang/page-6.webp",
+    "width": 1920,
+    "height": 1081,
+    "small": "/assets/optimized/portfolio-rongchang/page-6-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/portfolio-rongchang/page-7.jpg": {
+    "src": "/assets/optimized/portfolio-rongchang/page-7.webp",
+    "width": 1920,
+    "height": 1081,
+    "small": "/assets/optimized/portfolio-rongchang/page-7-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/profile-id-photo.png": {
+    "src": "/assets/optimized/profile-id-photo.webp",
+    "width": 540,
+    "height": 720
+  },
+  "/assets/profile-portrait.png": {
+    "src": "/assets/optimized/profile-portrait.webp",
+    "width": 900,
+    "height": 1100
+  },
+  "/assets/project-crm-cover.png": {
+    "src": "/assets/optimized/project-crm-cover.webp",
+    "width": 1600,
+    "height": 900,
+    "small": "/assets/optimized/project-crm-cover-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/project-crm.png": {
+    "src": "/assets/optimized/project-crm.webp",
+    "width": 1600,
+    "height": 1000
+  },
+  "/assets/project-dashboard-cover.png": {
+    "src": "/assets/optimized/project-dashboard-cover.webp",
+    "width": 1103,
+    "height": 620,
+    "small": "/assets/optimized/project-dashboard-cover-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/project-rongchang-cover.png": {
+    "src": "/assets/optimized/project-rongchang-cover.webp",
+    "width": 1600,
+    "height": 900,
+    "small": "/assets/optimized/project-rongchang-cover-800.webp",
+    "smallWidth": 800
+  },
+  "/assets/project-workflow.png": {
+    "src": "/assets/optimized/project-workflow.webp",
+    "width": 1600,
+    "height": 1000
+  },
+  "/assets/project-xiangchuang-cover.png": {
+    "src": "/assets/optimized/project-xiangchuang-cover.webp",
+    "width": 1600,
+    "height": 900,
+    "small": "/assets/optimized/project-xiangchuang-cover-800.webp",
+    "smallWidth": 800
+  }
+}
