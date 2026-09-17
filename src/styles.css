@@ -1470,7 +1470,9 @@ h3 {
   position: fixed;
   z-index: 70;
   opacity: 0.88;
-  mix-blend-mode: screen;
+  /* Keep moving particles out of the full-page backdrop compositing layer. */
+  isolation: isolate;
+  contain: layout style paint;
 }
 
 .star-trails span {

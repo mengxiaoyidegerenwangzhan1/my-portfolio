@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import imageAssets from "./image-assets.json";
 import {
   ChevronRight,
@@ -213,9 +213,69 @@ const readEditableCopy = () => {
   }
 };
 
+const EditableCopyContext = createContext({});
+
+// Keep the component type stable so ordinary state updates preserve text and refs.
+function EditableText({ as: Tag = "span", copyId, children, elementRef, ...props }) {
+  const copy = useContext(EditableCopyContext);
+  return (
+    <Tag {...props} ref={elementRef}>
+      {Object.prototype.hasOwnProperty.call(copy, copyId) ? copy[copyId] : children}
+    </Tag>
+  );
+}
+
+// Pointer particles update only this small overlay, never the page content.
+function StarTrails({ experienceRef }) {
+  const [stars, setStars] = useState([]);
+  const overlayRef = useRef(null);
+
+  useEffect(() => {
+    const main = overlayRef.current?.parentElement;
+    if (!main || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const timers = new Set();
+    let lastFrame = 0;
+    let nextId = 0;
+    const onPointerMove = (event) => {
+      const now = performance.now();
+      if (event.pointerType === "touch" || now - lastFrame < 34) return;
+      lastFrame = now;
+      const section = experienceRef.current;
+      if (section?.contains(event.target)) {
+        const rect = section.getBoundingClientRect();
+        section.style.setProperty("--about-x", `${((event.clientX - rect.left) / rect.width) * 100}%`);
+        section.style.setProperty("--about-y", `${((event.clientY - rect.top) / rect.height) * 100}%`);
+      }
+      const id = nextId++;
+      const star = { id, x: event.clientX, y: event.clientY, size: 4 + (id % 4),
+        driftX: id % 2 === 0 ? -10 : 10, driftY: -18 - (id % 5) * 4 };
+      setStars((items) => [...items.slice(-22), star]);
+      const timer = window.setTimeout(() => {
+        timers.delete(timer);
+        setStars((items) => items.filter((item) => item.id !== id));
+      }, 960);
+      timers.add(timer);
+    };
+    main.addEventListener("pointermove", onPointerMove, { passive: true });
+    return () => {
+      main.removeEventListener("pointermove", onPointerMove);
+      timers.forEach((timer) => window.clearTimeout(timer));
+    };
+  }, [experienceRef]);
+
+  return (
+    <div ref={overlayRef} className="star-trails global-star-trails" aria-hidden="true">
+      {stars.map((star) => <span key={star.id} style={{
+        "--trail-x": `${star.x}px`, "--trail-y": `${star.y}px`,
+        "--trail-size": `${star.size}px`, "--trail-dx": `${star.driftX}px`,
+        "--trail-dy": `${star.driftY}px`,
+      }} />)}
+    </div>
+  );
+}
+
 function App() {
   const [copyNotice, setCopyNotice] = useState("");
-  const [starTrails, setStarTrails] = useState([]);
   const [isTopVisible, setIsTopVisible] = useState(() => {
     if (typeof window === "undefined") return true;
     return window.location.hash === "" || window.location.hash === "#top";
@@ -237,8 +297,6 @@ function App() {
   const introTextRef = useRef(null);
   const introRoleRef = useRef(null);
   const copyTimerRef = useRef(null);
-  const starIdRef = useRef(0);
-  const starFrameRef = useRef(0);
   const scrollSnapLockRef = useRef(false);
 
   const getCopy = (copyId, fallback) => {
@@ -249,22 +307,6 @@ function App() {
     return fallback;
   };
 
-  const EditableText = ({
-    as: Tag = "span",
-    copyId,
-    children,
-    className,
-    elementRef,
-    ...props
-  }) => (
-    <Tag
-      {...props}
-      className={className}
-      ref={elementRef}
-    >
-      {getCopy(copyId, children)}
-    </Tag>
-  );
 
   useEffect(() => {
     const section = topRef.current;
@@ -482,41 +524,6 @@ function App() {
     event.currentTarget.style.setProperty("--title-y", `${y}%`);
   };
 
-  const moveGlobalTrail = (event) => {
-    const now = performance.now();
-    if (now - starFrameRef.current < 34) return;
-    starFrameRef.current = now;
-
-    const section = experienceRef.current;
-    if (section && section.contains(event.target)) {
-      const rect = section.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-
-      section.style.setProperty("--about-x", `${(x / rect.width) * 100}%`);
-      section.style.setProperty("--about-y", `${(y / rect.height) * 100}%`);
-    }
-
-    const x = event.clientX;
-    const y = event.clientY;
-    const id = starIdRef.current;
-    const size = 4 + (id % 4);
-
-    const star = {
-      id,
-      x,
-      y,
-      size,
-      driftX: id % 2 === 0 ? -10 : 10,
-      driftY: -18 - (id % 5) * 4,
-    };
-
-    starIdRef.current += 1;
-    setStarTrails((items) => [...items.slice(-22), star]);
-    window.setTimeout(() => {
-      setStarTrails((items) => items.filter((item) => item.id !== id));
-    }, 960);
-  };
 
   const moveProjectLight = (event) => {
     const rect = event.currentTarget.getBoundingClientRect();
@@ -607,8 +614,8 @@ function App() {
   }
 
   return (
+    <EditableCopyContext.Provider value={editableCopy}>
     <main
-      onPointerMove={moveGlobalTrail}
       style={{ "--about-floor-bg": experienceNear || projectsNear
         ? `url("${assetPath("/assets/about-floor-bg.png")}")` : "none" }}
     >
@@ -621,20 +628,7 @@ function App() {
           ))}
         </div>
       </div>
-      <div className="star-trails global-star-trails" aria-hidden="true">
-        {starTrails.map((star) => (
-          <span
-            key={star.id}
-            style={{
-              "--trail-x": `${star.x}px`,
-              "--trail-y": `${star.y}px`,
-              "--trail-size": `${star.size}px`,
-              "--trail-dx": `${star.driftX}px`,
-              "--trail-dy": `${star.driftY}px`,
-            }}
-          />
-        ))}
-      </div>
+      <StarTrails experienceRef={experienceRef} />
       <header className={`site-nav ${isTopVisible ? "is-top-visible" : ""}`}>
         <a className="hero-period" href="#top" aria-label="回到首页" onClick={(event) => jumpToSection(event, "#top")}>
           <EditableText copyId="hero.period">UI&UX Designer 2022-2026</EditableText>
@@ -1007,6 +1001,7 @@ function App() {
       </section>
 
     </main>
+    </EditableCopyContext.Provider>
   );
 }
 
